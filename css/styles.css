@@ -1,0 +1,19 @@
+body{
+    display: flex;
+    flex-direction: column;
+}
+#cards{
+display: flex;
+flex-direction: row;
+flex-wrap: wrap;
+width: 80%;
+height: 80%;
+}
+div{
+    height: 100px;
+    width: 250px;
+    margin: 10px;
+    border-radius: 20px;
+    background-color: bisque;
+    
+}
