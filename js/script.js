@@ -6,32 +6,44 @@
 
 //? FETCH DE PRODUCTOS
 const productsUrl = 'https://fakestoreapi.com/products';
-let products;
-const fetchProducts = async () =>{
-    
+
+
+const fetchProducts = async () => {
+
     await fetch(productsUrl)
-    .then(response => response.json())
-    .then(products => {
+        .then(response => response.json())
+        .then(products => {
 
-        console.log(products);
-        
-        let productsUl = document.createElement("ul");
-        productsUl.id = "ul";
-        let script = document.querySelector("#script");
-        script.before(productsUl);
-        let productList = document.querySelector("ul");
-        
-        for(let product of products){
-            let productLi = document.createElement("li");
-            productLi.id = "li";
-            productLi.innerHTML = product.title
-            productList.appendChild(productLi);
-        }
-    }
-    )
-    };
+            let productsUl = document.createElement("ul");
+            productsUl.id = "ul";
+            let script = document.querySelector("#script");
+            script.before(productsUl);
+            let productList = document.querySelector("ul");
 
-fetchProducts();
+            for (let product of products) {
+                let productLi = document.createElement("li");
+                productLi.id = "li";
+                let productDiv = document.createElement("div");
+                productDiv.id = "product";
+                productDiv.title = product.description;
+                let productImg = document.createElement("img");
+                productImg.src = product.image;
+                let productTitle = document.createElement("p");
+                productTitle.id = "productTitle"
+                productTitle.innerHTML = product.title;
+                let productPrice = document.createElement("p");
+                productPrice.id = "productPrice";
+                productPrice.innerHTML = product.price;
+                productDiv.appendChild(productImg);
+                productDiv.appendChild(productTitle);
+                productDiv.appendChild(productPrice);          
+                productLi.appendChild(productDiv);
+                productList.appendChild(productLi);
+            }
+        })
+        .catch(err => console.log(`Error: ${err}`));
+};
+
 
 // 3 - Hacer un fetch a fakestoreapi para obtener las categorías de productos (Buscar en la documentación de la API el endpoint correspondiente)
 // 4 - Generar en el DOM un <select> que contenga en sus opciones los nombres de las categorías en fakestoreapi. Las opciones deberán generarse dinámicamente, como los <li> del punto 2, no podrán escribirse a mano. La primera opción de nuestro <select> deberá ser "Todas las categorías".
@@ -43,58 +55,78 @@ const categoriesUrl = 'https://fakestoreapi.com/products/categories';
 
 const fetchCategories = async () => {
 
-    await   fetch(categoriesUrl)
-            .then(response => response.json())
-            .then(categories => {
+    await fetch(categoriesUrl)
+        .then(response => response.json())
+        .then(categories => {
 
-        let selectCategories = document.createElement("select");
-        selectCategories.id = "select";
-        let productList = document.querySelector("ul");
-        productList.after(selectCategories);
-        let categoryOption = document.createElement("option");
-        categoryOption.id = "option";
-        categoryOption.innerHTML = "Todas las categorias";
-        selectCategories.appendChild(categoryOption);
-
-        for(let category of categories){
+            let productList = document.querySelector("ul");
+            let selectCategories = document.createElement("select");
+            selectCategories.id = "select";
+            productList.before(selectCategories);
             let categoryOption = document.createElement("option");
-            categoryOption.innerHTML = category;
+            categoryOption.id = "option";
+            categoryOption.innerHTML = "Todas las categorias";
             selectCategories.appendChild(categoryOption);
-        };
-        let allCategories = document.querySelector("select");
-        allCategories.addEventListener("change", () =>{
 
-            let currentCategory = allCategories.value;
-            let url = "";
-            if(currentCategory !== "Todas las categorias"){
-                url = `https://fakestoreapi.com/products/category/${currentCategory}`;
-            }else{
-                url = "https://fakestoreapi.com/products";
-            }
+            for (let category of categories) {
+                let categoryOption = document.createElement("option");
+                categoryOption.innerHTML = category;
+                selectCategories.appendChild(categoryOption);
+            };
+            let allCategories = document.querySelector("select");
+            allCategories.addEventListener("change", () => {
 
-          fetch(url)
-            .then(res=>res.json())
-            .then(categoryProducts=>
-             {
-                 console.log(categoryProducts);
-                let allLi = document.querySelectorAll("#li");
-                let productList = document.querySelector("ul");
+                let currentCategory = allCategories.value;
+                let url = "";
 
-                for(let li of allLi){
-                    productList.removeChild(li);
+                if (currentCategory !== "Todas las categorias") {
+                    url = `https://fakestoreapi.com/products/category/${currentCategory}`;
+                } else {
+                    url = "https://fakestoreapi.com/products";
                 };
-                
-                for (const product of categoryProducts) {
-                    let productLi = document.createElement("li");
-                    productLi.id = "li";
-                    productLi.innerText = product.title
-                    productList.appendChild(productLi)
+             
+                fetch(url)
+                    .then(res => res.json())
+                    .then(categoryProducts => {
+                        let allLi = document.querySelectorAll("#li");
+                        let productList = document.querySelector("ul");
 
-                }
-                });
-        });
-    }); 
+                        for (let li of allLi) {
+                            productList.removeChild(li);
+                        };
 
+                        for (const product of categoryProducts) {
+                            let productLi = document.createElement("li");
+                            productLi.id = "li";
+                            let productDiv = document.createElement("div");
+                            productDiv.id = "product";
+                            productDiv.title = product.description;
+                            let productImg = document.createElement("img");
+                            productImg.src = product.image;
+                            let productTitle = document.createElement("p");
+                            productTitle.id = "productTitle"
+                            productTitle.innerHTML = product.title;
+                            let productPrice = document.createElement("p");
+                            productPrice.id = "productPrice";
+                            productPrice.innerHTML = product.price;
+                            productDiv.appendChild(productImg);
+                            productDiv.appendChild(productTitle);
+                            productDiv.appendChild(productPrice);          
+                            productLi.appendChild(productDiv);
+                            productList.appendChild(productLi);
+
+                        }
+                    })
+                    .catch(err => console.log(`Error: ${err}`));
+            });
+        })
+        .catch(err => console.log(`Error: ${err}`));
 }
 
-fetchCategories();
+
+const store = async () => {
+    await fetchProducts();
+    fetchCategories();
+};
+
+store();
