@@ -12,6 +12,13 @@ body{
     justify-content: center;
 }
 
+.navBar {
+    color: red;
+    font-size: 1.5em;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+}
 
 #li{
     display: flex;
