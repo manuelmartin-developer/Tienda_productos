@@ -99,7 +99,7 @@ const fetchCategories = async () => {
                             let productLi = document.createElement("li");
                             productLi.id = "li";
                             let productDiv = document.createElement("div");
-                            productDiv.id = "product";
+                            productDiv.id = "productCard";
                             productDiv.title = product.description;
                             let productImg = document.createElement("img");
                             productImg.src = product.image;
